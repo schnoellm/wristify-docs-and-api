@@ -1,4 +1,4 @@
-# wristify-demo
+# Wristify API and sample implementations
 This repository contains demo endpoint providers for the Wristify Garmin Widget.
 The Wristify Garmin Widget uses an easy to understand and easy to use API, to access data from a custom implemented REST API endpoint.
 This respository should give developers assistance in implementing a compatible rest based backend service for the Wristify app.

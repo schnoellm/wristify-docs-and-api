@@ -1,17 +1,17 @@
 # Wristify API and sample implementations
-This repository contains demo endpoint providers for the Wristify Garmin Widget.
-The Wristify Garmin Widget uses an easy to understand and easy to use API, to access data from a custom implemented REST API endpoint.
-This respository should give developers assistance in implementing a compatible rest based backend service for the Wristify app.
+This page includes the API specification for the Wristify app for Garmin watches.
+It uses an easy to understand and easy to implement API specification, to communicate with custom implemented online services.
+This respository shall give developers assistance in implementing a compatible REST based online service for the Wristify app.
 
 
 ## API and requirements
-The Wristify Garmin Widget expects the following API to be provided by a compatible endpoint provider. The endpoint provider can be hosted on an arbitrary domain and url path.
-In terms of authentication and authorization, it expects HTTP basic authentication to be used.
-Also make sure to use a trusted HTTPS certificate, as otherwise the Garmin IQ App will refuse to forward REST calls from the Garmin watch to the actual backend service.
+The Wristify app expects the following API to be provided by a compatible endpoint provider. The endpoint provider can be hosted on an arbitrary domain and url path.  
+In terms of authentication and authorization, it expects HTTP basic authentication to be used.  
+Also make sure to use a trusted HTTPS certificate, as otherwise the Garmin IQ App will refuse to forward REST calls from the Garmin watch to the actual online service.
 
 
 ### List of available endpoints
-Returns the list of endpoints and the respective groups how the endpoints should be grouped on the Wristify app.
+Returns the list of endpoints and the groups how they are organized.
 | Option | Value |
 | - | - |
 | URL | `https://my-custom-domain.io/arbitrary-path/endpoints` |
@@ -72,26 +72,30 @@ If an array of response objects is received, the Wristify app shows them in the 
 | URL | `https://my-custom-domain.io/arbitrary-path/endpoints/<endpoint-id>` |
 | Method | `POST` |
 | Authentication | `Basic Authentication` |
-| Response | Any of the listed response objects or array of response objects |
+| Response | Any of the listed response objects or an array of response objects |
 
 
-**Text response**  
-Shows a simple text field with the received text.
-If the text is too long to be displayed on the watch display, it automatically breaks to a second page.  
+## Response objects
+
+The following response objects might be returned on endpoint calls by the online service.
+
+### Text response
+Shows one or more pages with the received text. Number of pages depends on the length of text and wether this is supported for the actual watch model, due to memory constraints.
 
 ```json
-// single text response
+// text response
 {
     "text": "Some sample text, that can be displayed on the Wristify Garmin Widget."
 }
 ```
 
 
-**Trend response / Data response**  
-Shows a XY/TY diagram with one or multiple lines.
-An additional page on the watch app shows the legend and the time range of the shown data.
+### Trend response / Data response
+Shows an XY/TY diagram with one or multiple lines.
+An additional page on the watch app shows the legend, min/max values and the time range of the shown data.  
+**Hint:** This is not supported on certain watch models, due to memory constraints.
 
-The available colors are as follows:
+Supported line colors:
 - `white`
 - `grey`
 - `dark grey`
@@ -108,7 +112,7 @@ The available colors are as follows:
 - `pink`
 
 ```json
-// single data response to show a trend
+// ty trend sample
 {
     "data": [
         {
@@ -165,12 +169,44 @@ The available colors are as follows:
         }
     ]
 }
+
+// xy trend sample
+{
+    "data": [
+        {
+            "name": "Line 1",
+            "color": "red",
+            "data": [
+                {
+                    "x": 1,
+                    "y": 2
+                },
+                {
+                    "x": 2,
+                    "y": 4
+                },
+                {
+                    "x": 3,
+                    "y": 3
+                },
+                {
+                    "x": 4,
+                    "y": 5
+                },
+                {
+                    "x": 5,
+                    "y": 4
+                }
+            ]
+        }
+    ]
+}
 ```
 
 
-**Image response**  
+### Image response
 Displays an image on the watch. Optionally it also requests the Garmin Connect IQ mobile app to open it on the connected phone.
-The image must be publicly accessible without any authentication, as the requested image gets proxied through Garmin servers, which convert the image to the respecitve color palette for the requesting Garmin watch model.
+The image must be publicly accessible without any authentication, as the requested image gets proxied through Garmin servers. The Garmin servers convert the image to the respecitve color palette for the actual watch model.
 
 ```json
 // array of simple text response and image response
@@ -190,10 +226,12 @@ The image must be publicly accessible without any authentication, as the request
 ```
 
 
-**Actions response**  
-Offers a list of selectable actions. The user can then switch through the available actions (one per page) and can trigger a desired action.
-The Wristify widget calls the same endpoint, but passes the respective `parameter` value to the endpoint provider. `parameter` can be any valid JSON object, array or string value.
-Based on the actual `parameter` value, the endpoint provider can decide what action to perform and what response to return. The response can then again be one of the available response objects (e.g. `text`, `data`, `image`, `actions`).
+### Actions response
+Offers a list of selectable actions. The user can then switch through the available actions (one per page) and can trigger the desired action.  
+The Wristify widget calls the exact same endpoint once more, but passes the respective `parameter` value to the endpoint provider.
+`parameter` can be any valid JSON object, array or string value.
+Based on the actual `parameter` value, the endpoint provider can then decide which action to perform and what to respond with.  
+The response can then again be one of the available response objects (e.g. `text`, `data`, `image`, `actions`).
 
 ```json
 // response array, which includes a sample text and an actions response object
@@ -229,19 +267,3 @@ Based on the actual `parameter` value, the endpoint provider can decide what act
     }
 ]
 ```
-
-
-## Sample implementations
-
-To ease the implementation of endpoint providers, this repository includes the following sample implementations:
-- [Javascript](./sample-endpoint-providers/javascript-sample/README.md)
-
-
-## Related projects
-This project nicely plays together with the api-proxy service, which offers a frontend implementation for accessing the provided API calls. (api-proxy application is not public yet)
-
-
-## Future TODOs
-
-*OpenAPI Specification*
-Eventhough the API is quite simple to implement, an OpenAPI specification file should further ease implementation and use.

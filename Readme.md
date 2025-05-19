@@ -1,9 +1,8 @@
 # Wristify
 A widget for garmin watches to access custom online services through an easy to implement REST API.
 
-
 ## What it is
-Wristify is a app/widget for garmin watches and can be downloaded in the [Garmin Store](TODO-Link) <!-- TODO -->  
+Wristify is a app/widget for garmin watches and can be downloaded in the [Garmin Store](https://apps.garmin.com/apps/9544f08e-9bbd-4252-8b81-e2ff9bd21c52)
 It can be installed on supported garmin watches and allows the user to access custom implemented APIs directly from their garmin smart watch.
 
 ### Possible use cases
@@ -17,7 +16,6 @@ Possible use cases for Writisfy include:
 
 The list of use cases is literally endless, as any custom logic can be implemented in the online service and any custom actions may be triggered.
 
-
 ## How does it work
 Wristify works in the following way:
 - The app needs an appropriate online service, which is implemented by the user and provides a REST API following a certain [API specification](api-specification.md).
@@ -25,13 +23,11 @@ Wristify works in the following way:
 - The online service can implement any custom logic the user want to offer for the garmin app to be accessible.
 - In order for the app to access the functionality of the online service, the app requires an active network connection to the online service.
 
-
 ## Requirements
-Wristify needs to the following prerequisites:
+Wristify needs the following prerequisites:
 - Online service that is hosted somewhere accessible and offers the required REST API implementation
 - The online service needs to use a trusted HTTPS certificate in order that the watch trusts the communication
 - Active network connection to the online service
-
 
 # Features
 Wristify can handle the following responses to be displayed and interacted with:
@@ -43,7 +39,6 @@ Wristify can handle the following responses to be displayed and interacted with:
 These responses can be access by calling individual endpoints directly from the watch. One or multiple of these responses can be returned by the online service and the watch app will handle them accordingly.
 Furthermore the individual endpoints can organized in groups.
 
-
 ## Limited functionality on watch models
 Depending on the actual watch model and the available system memory of that particular model, features like the "XY/TY diagrams" and the display of imagesare disabled due to limited system memory. This affects the following models:
 - Vivoactive 3
@@ -51,7 +46,6 @@ Depending on the actual watch model and the available system memory of that part
 - Forerunner 55, 245, 645, 935
 - Fenix 5, 5s, 6, 6s, chronos
 - Instinct crossover, 2, 2s, 2x
-
 
 # Configuration and usage
 1. Once you have installed the Wristify app, open the Garmin Connect IQ app on your smartphone and navigate to the app settings.
@@ -74,7 +68,6 @@ Depending on the actual watch model and the available system memory of that part
 9. Select the desired endpoint and wait for the online service to respond
 10. Once done, you can leave the app with the "back" button or "back" gesture, or wait till the widget times out and gets closed by the watch automatically.
 
-
 ## Trial mode and License key
 The Wristify app requires a license key to provide all the features and to not be restricted in the count of usable endpoints and response objects.
 
@@ -86,7 +79,6 @@ Contact me together with the identifier and a short description of your automati
 
 *Especially in the initial phase I'm happy to provide license keys for free, as I don't know yet how the whole project turns out.*
 
-
 # Implementation and technical stuff
 Wristify requires an online service to function properly and to provide the desired functionality.  
 That online service can be implemented with the help any programming language or framework you choose.
@@ -96,7 +88,6 @@ The [API specification](./api-specification.md) is kept quite easy to follow, wh
 **Sample implementation:**  
 See [javascript sample implementation](https://github.com/schnoellm/wristify-javascript-sample) for a sample implementation implemented in javascript.  
 Which the help of [glitch.com](glitch.com), it can even be temporarily hosted for a quick and easy start.
-
 
 **Long term usage**  
 Make sure to choose an appropriate hosting mechanism in the long run and ensure to utilize a trusted HTTPS certificate for the service itself.

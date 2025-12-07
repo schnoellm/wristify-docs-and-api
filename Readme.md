@@ -32,7 +32,7 @@ Wristify needs the following prerequisites:
 # Features
 Wristify can handle the following responses to be displayed and interacted with:
 - Regular text responses to be displayed on the watch
-- XY and TY diagrams to be displayed (incl. legend)
+- XY, TY charts and bar charts to be displayed (incl. legend)
 - Images to be displayed on the watch or opened on the smartphone
 - Custom action responses to select from and trigger custom actions on the online service
 
@@ -40,7 +40,7 @@ These responses can be access by calling individual endpoints directly from the 
 Furthermore the individual endpoints can organized in groups.
 
 ## Limited functionality on watch models
-Depending on the actual watch model and the available system memory of that particular model, features like the "XY/TY diagrams" and the display of imagesare disabled due to limited system memory. This affects the following models:
+Depending on the actual watch model and the available system memory of that particular model, features like the "XY/TY/bar charts" and the display of imagesare disabled due to limited system memory. This affects the following models:
 - Vivoactive 3
 - Venu Square
 - Forerunner 55, 245, 645, 935

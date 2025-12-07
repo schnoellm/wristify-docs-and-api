@@ -57,9 +57,27 @@ Returns the list of endpoints and the groups how they are organized.
             "name": "second-group",
             "endpoints":["trend-sample","image-sample","action-sample"]
         }
-    ]
+    ],
+    "hash": "<textual hash value of the endpoint response>"     // optional to improve loading speed, as Wristify caches the list of endpoints and groups in memory, along with the hash value provided
 }
 ```
+
+#### Use Hash for improve loading speed
+To improve startup speed and avoid unnecessary initial requests, Wristify stores the list of endpoints and groups along with the hash value in the watch's flash memory.  
+- The hash value can be any textual value, regardless of length or content. It's purpose is to detect an updated list of endpoints or groups.
+- In order to detect updates, Wristify will call the base endpoint with the query parameter `hashonly=true` and compares the received hash value with the stored one.
+- If the values differ, Wristify will then request the new list and will update the stored hash value respectively for future comparison.
+
+**Attention:** Make sure to tie the hash value to the actual payload content. Otherwise Wristify won't notice any changes to the endpoints list, if the hash value stays unchanged all the time.
+
+```bash
+# example call, how Wristify checks the hash
+curl -X GET https://my-custom-domain.io/arbitrary-path/endpoints?hashonly=true -u "username:password"
+# responds with hash only
+{"hash":"2ofvdfFj6IcGHpI+5aQ/PD78xQm2eB79EvW2n/Uaen0="}
+```
+
+**Hash value is optional:** If the payload does not contain a hash value, Wristify will ignore any optimization and will always query the whole list on each startup. With smaller lists there is no significant perceived difference in loading time.
 
 
 ### Call an endpoint
@@ -90,8 +108,8 @@ Shows one or more pages with the received text. Number of pages depends on the l
 ```
 
 
-### Trend response / Data response
-Shows an XY/TY diagram with one or multiple lines.
+### Chart response
+Shows an XY/TY/bar chart with one or multiple data sets.
 An additional page on the watch app shows the legend, min/max values and the time range of the shown data.  
 **Hint:** This is not supported on certain watch models, due to memory constraints.
 
@@ -110,6 +128,233 @@ Supported line colors:
 - `dark blue`
 - `purple`
 - `pink`
+
+```json
+// ty chart sample
+{
+    "chart": {
+        "options": {            // optional
+            "type": "line"      // optional, "type" defaults to "line"
+        },
+        "datasets": [
+            {
+                "name": "Line 1",
+                "color": "red",
+                "data": [
+                    {
+                        "t": 1741906800,
+                        "y": 6
+                    },
+                    {
+                        "t": 1741993200,
+                        "y": 4
+                    },
+                    {
+                        "t": 1742079600,
+                        "y": 6
+                    },
+                    {
+                        "t": 1742166000,
+                        "y": 6
+                    },
+                    {
+                        "t": 1742252400,
+                        "y": 10
+                    }
+                ]
+            },
+            {
+                "name": "Line 2",
+                "color": "blue",
+                "data": [
+                    {
+                        "t": 1741906800,
+                        "y": 3
+                    },
+                    {
+                        "t": 1741993200,
+                        "y": 2
+                    },
+                    {
+                        "t": 1742079600,
+                        "y": 3
+                    },
+                    {
+                        "t": 1742166000,
+                        "y": 1
+                    },
+                    {
+                        "t": 1742252400,
+                        "y": -4
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+// xy chart sample
+{
+    "chart": {
+        "options": {            // optional
+            "type": "line"      // optional, "type" defaults to "line"
+        },
+        "datasets": [
+            {
+                "name": "Line 1",
+                "color": "red",
+                "data": [
+                    {
+                        "x": 1,
+                        "y": 2
+                    },
+                    {
+                        "x": 2,
+                        "y": 4
+                    },
+                    {
+                        "x": 3,
+                        "y": 3
+                    },
+                    {
+                        "x": 4,
+                        "y": 5
+                    },
+                    {
+                        "x": 5,
+                        "y": 4
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+// bar chart sample
+{
+    "chart": {
+        "options": {
+            "type": "bar",      // required for bar chart
+            "labelsX": {        // optional, specifies the names of the individual bars (refers to 'x' values in datasets)
+                "0": "Mon",
+                "1": "Tue",
+                "2": "Wed",
+                "3": "Thu",
+                "4": "Fri",
+                "5": "Sat",
+                "6": "Sun"
+            }
+        },
+        "datasets": [
+            {
+                "name": "Set 1",
+                "color": "red",
+                "data": [
+                    {
+                        "x": 0,
+                        "y": 1
+                    },
+                    {
+                        "x": 1,
+                        "y": 2
+                    },
+                    {
+                        "x": 2,
+                        "y": 3
+                    },
+                    {
+                        "x": 3,
+                        "y": 4
+                    },
+                    {
+                        "x": 4,
+                        "y": 5
+                    },
+                    {
+                        "x": 5,
+                        "y": 6
+                    },
+                    {
+                        "x": 6,
+                        "y": 7
+                    },
+                ]
+            },
+            {
+                "name": "Set 2",
+                "color": "dark blue",
+                "data": [
+                    {
+                        "x": 0,
+                        "y": 5
+                    },
+                    {
+                        "x": 1,
+                        "y": 6
+                    },
+                    {
+                        "x": 2,
+                        "y": 7
+                    },
+                    {
+                        "x": 3,
+                        "y": 8
+                    },
+                    {
+                        "x": 4,
+                        "y": 9
+                    },
+                    {
+                        "x": 5,
+                        "y": 10
+                    },
+                    {
+                        "x": 6,
+                        "y": 11
+                    },
+                ]
+            },
+            {
+                "name": "Set 3",
+                "color": "yellow",
+                "data": [
+                    {
+                        "x": 0,
+                        "y": 6
+                    },
+                    {
+                        "x": 1,
+                        "y": 4
+                    },
+                    {
+                        "x": 2,
+                        "y": 2
+                    },
+                    {
+                        "x": 3,
+                        "y": 0
+                    },
+                    {
+                        "x": 4,
+                        "y": 2
+                    },
+                    {
+                        "x": 5,
+                        "y": 4
+                    },
+                    {
+                        "x": 6,
+                        "y": 6
+                    },
+                ]
+            }
+        ]
+    }
+}
+```
+
+#### Deprecated format
+The following format for XY/TY charts is still supported as of Wristify version 0.4.0, but it's recommended to adapt to the new format listed above.
 
 ```json
 // ty trend sample
@@ -164,38 +409,6 @@ Supported line colors:
                 {
                     "t": 1742252400,
                     "y": -4
-                }
-            ]
-        }
-    ]
-}
-
-// xy trend sample
-{
-    "data": [
-        {
-            "name": "Line 1",
-            "color": "red",
-            "data": [
-                {
-                    "x": 1,
-                    "y": 2
-                },
-                {
-                    "x": 2,
-                    "y": 4
-                },
-                {
-                    "x": 3,
-                    "y": 3
-                },
-                {
-                    "x": 4,
-                    "y": 5
-                },
-                {
-                    "x": 5,
-                    "y": 4
                 }
             ]
         }
@@ -266,4 +479,18 @@ The response can then again be one of the available response objects (e.g. `text
         ]
     }
 ]
+```
+
+### Properties object
+The `properties` object allows to send along additional properties with the endpoint response. At the moment it allows to specify the behaviour of the *back button* on the watches.
+This allows to specify if the *back button* navigates back to the previous screen (e.g. one nested level up to the previous page level), back to the endpoint selection menu or exit the app.
+
+
+```json
+// properties object, which defines the behaviour of the back button, when pressed on any of the endpoints page
+{
+    "properties": {
+        "backBehaviour": "single"   // options are: single | toMenu | exit
+    }
+}
 ```
